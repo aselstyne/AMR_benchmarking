@@ -1,6 +1,4 @@
 #!/usr/bin/python
-
-### THIS IS THE NCBI VERSION. See name_utility_OLD.py for the PATRIC version ###
 import sys,os
 # sys.path.append('../')
 sys.path.insert(0, os.getcwd())
@@ -12,18 +10,18 @@ import pandas as pd
 # Names for general use
 # ======================
 def GETname_main_meta(level):
-    main_meta='./data/NCBI/meta/'+str(level)+'_Species_antibiotic_FineQuality.csv'
-    main_multi_meta='./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv'
+    main_meta='./data/PATRIC/meta/'+str(level)+'_Species_antibiotic_FineQuality.csv'
+    main_multi_meta='./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv'
     return main_meta,main_multi_meta
 
 def GETname_meta(species,anti,level):
     # Returns the filename for the metadata of a specific species and antibiotic
-    # They're stored in data/NCBI/meta/loose_by_species/
+    # They're stored in data/PATRIC/meta/loose_by_species/
     # These files contain the list of assemblies relevant to the species/drug combo
     # If you append _pheno.txt to the end of the file, you get a table with genome IDs and resistance phenotypes
-    ID='./data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    ID='./data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
         anti.translate(str.maketrans({'/': '_', ' ': '_'})))
-    ## pheno='./data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    ## pheno='./data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
     ##     anti.translate(str.maketrans({'/': '_', ' ': '_'}))) +'_pheno.txt'
     return ID
 
@@ -35,13 +33,13 @@ def GETname_folds(species,anti,level,f_kma,f_phylotree):
     else:
         f_folds='_random_cv.json'
 
-    folds_folder='./data/NCBI/cv_folds/'+str(level)+'/single_S_A_folds/'+str(species.replace(" ", "_"))+'/'+str(anti.translate(str.maketrans({'/': '_', ' ': '_'})))+f_folds
+    folds_folder='./data/PATRIC/cv_folds/'+str(level)+'/single_S_A_folds/'+str(species.replace(" ", "_"))+'/'+str(anti.translate(str.maketrans({'/': '_', ' ': '_'})))+f_folds
     return folds_folder
 
 
 def GETname_model(software, level,species, anti,cl,temp_path):
     '''usage: s2g, resfinder_folds'''
-    meta = './data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    meta = './data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
         anti.translate(str.maketrans({'/': '_', ' ': '_'}))) +'_pheno.txt'
     meta_temp = str(temp_path)+'log/software/' +  str(software) +'/software_output/'+   str(species.replace(" ", "_"))  + '/' + \
         str(anti.translate(str.maketrans({'/': '_', ' ': '_'})))
@@ -55,7 +53,7 @@ def GETname_model(software, level,species, anti,cl,temp_path):
 
 def GETname_model2(software, level,species, anti,cl,temp_path,f_kma,f_phylotree):
     '''usage: kover, Phenotypeseeker'''
-    meta = './data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    meta = './data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
         anti.translate(str.maketrans({'/': '_', ' ': '_'}))) +'_pheno.txt'
     if f_phylotree:
         meta_temp = str(temp_path)+'log/software/' +  str(software) +'/software_output/phylotree/'+   str(species.replace(" ", "_"))  + '/' + \
@@ -82,7 +80,7 @@ def GETname_model2(software, level,species, anti,cl,temp_path,f_kma,f_phylotree)
 
 def GETname_model2_val(software, level,species, anti,cl,temp_path,f_kma,f_phylotree):
     '''usage: kover validation.'''
-    meta = './data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    meta = './data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
         anti.translate(str.maketrans({'/': '_', ' ': '_'}))) +'_pheno.txt'
     if f_phylotree:
         meta_temp = str(temp_path)+'log/software/' +  str(software) +'/software_output_val/phylotree/'+   str(species.replace(" ", "_"))  + '/' + \
@@ -111,7 +109,7 @@ def GETname_model2_val(software, level,species, anti,cl,temp_path,f_kma,f_phylot
 def GETname_model3(software, level,species,anti,cl,temp_path):
     '''usage: kover, phenotypeseeker multi-species single-antibiotic model '''
 
-    meta = './data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    meta = './data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
         anti.translate(str.maketrans({'/': '_', ' ': '_'}))) +'_pheno.txt'
     meta_temp = str(temp_path)+'log/software/' +  str(software) +'/software_output/MS/'+   str(species.replace(" ", "_"))  + '/' + \
         str(anti.translate(str.maketrans({'/': '_', ' ': '_'})))
@@ -123,7 +121,7 @@ def GETname_model3(software, level,species,anti,cl,temp_path):
 
 def GETname_model4(software,base_software, level,species, anti,cl,temp_path,f_kma,f_phylotree):
     '''usage: ensemble base methods'''
-    meta = './data/NCBI/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
+    meta = './data/PATRIC/meta/'+str(level)+'_by_species/Data_' + str(species.replace(" ", "_")) + '_' + str(\
         anti.translate(str.maketrans({'/': '_', ' ': '_'}))) +'_pheno.txt'
     if f_phylotree:
         meta_temp = str(temp_path)+'log/software/' +  str(software) +'/software_output/phylotree/'+ base_software +'/'+ str(species.replace(" ", "_"))  + '/' + \
@@ -189,8 +187,8 @@ def GETname_AAresult(software,species,learning, epochs,f_fixed_threshold,f_nn_ba
 # Names for data preprocess
 # ======================
 def GETname_quality(species,level):
-    save_all_quality='./data/NCBI/quality/' + str(species.replace(" ", "_"))+".csv"
-    save_quality="./data/NCBI/meta/fine_quality/GenomeFineQuality_" +str(level)+'_'+ str(species.replace(" ", "_")) + '.txt'
+    save_all_quality='./data/PATRIC/quality/' + str(species.replace(" ", "_"))+".csv"
+    save_quality="./data/PATRIC/meta/fine_quality/GenomeFineQuality_" +str(level)+'_'+ str(species.replace(" ", "_")) + '.txt'
 
     return save_all_quality,save_quality
 def load_metadata(SpeciesFile):#for metadata.py
@@ -198,7 +196,7 @@ def load_metadata(SpeciesFile):#for metadata.py
     :param SpeciesFile: species list
     :return: Metadata for each strain, which belongs to the species in the parameter file
     '''
-    data = pd.read_csv('./data/NCBI/NCBI_genomes_AMR.txt', dtype={'genome_id': object, 'genome_name': object}, sep="\t")
+    data = pd.read_csv('./data/PATRIC/PATRIC_genomes_AMR.txt', dtype={'genome_id': object, 'genome_name': object}, sep="\t")
     data['genome_name'] = data['genome_name'].astype(str)
     data['species'] = data.genome_name.apply(lambda x: ' '.join(x.split(' ')[0:2]))
     data = data.loc[:, ("genome_id", 'species', 'antibiotic', 'resistant_phenotype')]
@@ -341,7 +339,7 @@ def GETname_foldsSSMA(species,level,f_kma,f_phylotree):
     else:
         f_folds='_random_cv.json'
 
-    folds_folder='./data/NCBI/cv_folds/'+str(level)+'/single_S_multi_A_folds/'+str(species.replace(" ", "_"))+ f_folds
+    folds_folder='./data/PATRIC/cv_folds/'+str(level)+'/single_S_multi_A_folds/'+str(species.replace(" ", "_"))+ f_folds
     return folds_folder
 
 
@@ -428,7 +426,7 @@ def GETname_foldsMSMA(merge_name,level,f_kma,f_phylotree):
     else:
         f_folds='_random_cv.json'
 
-    folds_folder='./data/NCBI/cv_folds/'+str(level)+'/multi_S_folds/'+str(merge_name)+f_folds
+    folds_folder='./data/PATRIC/cv_folds/'+str(level)+'/multi_S_folds/'+str(merge_name)+f_folds
     return folds_folder
 def GETname_foldsMSMA_concatLOO(species,level,f_kma,f_phylotree):
     if f_kma:
@@ -438,7 +436,7 @@ def GETname_foldsMSMA_concatLOO(species,level,f_kma,f_phylotree):
     else:
         f_folds='_random_cv.json'
 
-    folds_folder='./data/NCBI/cv_folds/'+str(level)+'/multi_S_LOO_folds/'+str(species.replace(" ", "_"))+ f_folds
+    folds_folder='./data/PATRIC/cv_folds/'+str(level)+'/multi_S_LOO_folds/'+str(species.replace(" ", "_"))+ f_folds
     return folds_folder
 
 

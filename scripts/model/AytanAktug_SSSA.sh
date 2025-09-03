@@ -27,10 +27,10 @@ source activate ${multi_env_name}
 #source activate ${multi_torch_env_name}
 wait
 echo $CONDA_DEFAULT_ENV
-IFS=', ' read -ra species_list_temp <<< "$species_list"
+IFS=', ' read -ra species_list_temp <<< "$species_list" # This is the list of 11 strings of species names
 species=( "${species_list_temp[@]//_/ }" )
 
-IFS=', ' read -ra species_list_temp_tree <<< "$species_list_phylotree"
+IFS=', ' read -ra species_list_temp_tree <<< "$species_list_phylotree" # species that have phylo trees? Idk honestly
 species_tree=( "${species_list_temp_tree[@]//_/ }" )
 
 #### Initialization

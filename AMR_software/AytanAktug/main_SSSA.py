@@ -80,11 +80,12 @@ def extract_info(path_sequence,s,level,f_initialize,f_pre_cluster,f_res,f_merge_
                  f_matching_io,f_nn,cv, epochs, learning,f_scaler,f_fixed_threshold,
                  f_nn_base,f_phylotree,f_kma,f_optimize_score,n_jobs,f_all,temp_path,f_cpu):
 
-    main_meta,_=name_utility.GETname_main_meta(level)
-    data = pd.read_csv(main_meta, index_col=0, dtype={'genome_id': object}, sep="\t")
+    main_meta,_=name_utility.GETname_main_meta(level) # level=loose, main_meta='./data/NCBI/meta/'+str(level)+'_Species_antibiotic_FineQuality.csv'
+    data = pd.read_csv(main_meta, index_col=0, dtype={'genome_id': object}, sep="\t") 
+    print(data)
     if f_all == False:
         data = data.loc[s, :]
-    df_species = data.index.tolist()
+    df_species = data.index.tolist() # This is a dataframe of 3 columns: species name, number of applicable drugs, list of applicable drugs.
 
     for species in df_species:
 

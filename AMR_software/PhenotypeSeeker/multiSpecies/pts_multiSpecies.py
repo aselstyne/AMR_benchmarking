@@ -32,7 +32,7 @@ def extract_info(list_species,f_all,kmer, f_prepare_meta ,f_ml,cv,level, temp_pa
 
 
     merge_name = []
-    data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+    data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                        dtype={'genome_id': object}, sep="\t")
 
     if f_all:

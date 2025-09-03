@@ -21,7 +21,7 @@ def kmer(species,k,canonical,vocab,temp_path):
     '''
 
 
-    save_name_speciesID='./data/PATRIC/meta/by_species_bq/id_' + str(species.replace(" ", "_"))
+    save_name_speciesID='./data/NCBI/meta/by_species_bq/id_' + str(species.replace(" ", "_"))
     save_name_kmer ,_, _, _, _,_ =  name_utility.GETname_S2Gfeature(species, temp_path,k)
     save_mame_kmc=str(temp_path)+'log/software/seq2geno/software_output/cano'+ str(k) + 'mer/merge_'+str(k)+'mers_'
 

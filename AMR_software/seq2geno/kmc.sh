@@ -10,7 +10,7 @@ log_path="$2"
 
 
 #-----6mer 
-cat ./data/PATRIC/meta/genome_list|
+cat ./data/NCBI/meta/genome_list|
 while read i; do
   echo
     "kmc -k6 -m24 -fm -ci0 -cs1677215 "${dna_path}/${i}.fna" ${log_path}log/software/seq2geno/software_output/cano6mer/temp/NA.res ${log_path}log/software/seq2geno/software_output/cano6mer

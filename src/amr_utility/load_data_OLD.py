@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
-### THIS IS THE NCBI VERSION. See load_data_OLD.py for the PATRIC version ###
 import pandas as pd
 import numpy as np
 import ast
-from src.amr_utility import name_utility as name_utility
+from src.amr_utility import name_utility
 #import name_utility
 
 

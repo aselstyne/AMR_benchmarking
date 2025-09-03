@@ -89,7 +89,8 @@ def run_Res(path,path_results,strain_ID,species,threshold_point,min_cov_point):
 
 def determination(species,path_data,n_jobs,temp_path,threshold_point,min_cov_point):
     path_results=temp_path
-    save_name_speciesID = './data/PATRIC/meta/by_species_bq/id_' + str(species.replace(" ", "_"))
+    # NEXT LINE CHANGED FROM PATRIC
+    save_name_speciesID = './data/NCBI/meta/by_species_bq/id_' + str(species.replace(" ", "_"))
     id=np.genfromtxt(save_name_speciesID, dtype="str")
     data_sub_anti = pd.DataFrame(data=id, columns=['genome_id'],index=np.array(range(len(id))))
     data_sub_anti = data_sub_anti.drop_duplicates()

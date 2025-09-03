@@ -279,7 +279,7 @@ def extract_info(fscore,f_SSMA,f_SSSA,f_MSMA_discrete,f_MSMA_conMix,f_MSMA_conLO
             ### by anitbiotics
 
             merge_name = []
-            data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+            data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                            dtype={'genome_id': object}, sep="\t")
             if f_all:
                 list_species = data.index.tolist()[:-1]
@@ -315,7 +315,7 @@ def extract_info(fscore,f_SSMA,f_SSSA,f_MSMA_discrete,f_MSMA_conMix,f_MSMA_conLO
             ### split species-specific scores from discrete model and concatenated mixed species model.
 
             merge_name = []
-            data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+            data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                            dtype={'genome_id': object}, sep="\t")
             if f_all:
                 list_species = data.index.tolist()[:-1]
@@ -416,7 +416,7 @@ def extract_info(fscore,f_SSMA,f_SSSA,f_MSMA_discrete,f_MSMA_conMix,f_MSMA_conLO
 
         elif f_MSMA_discrete and f_match_single: #match the single-species model results to the multi-s model table for a comparison.
             merge_name = []
-            data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+            data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                            dtype={'genome_id': object}, sep="\t")
             if f_all:
                 list_species = data.index.tolist()[:-1]
@@ -472,7 +472,7 @@ def extract_info(fscore,f_SSMA,f_SSSA,f_MSMA_discrete,f_MSMA_conMix,f_MSMA_conLO
         if f_split_species==False:
 
             merge_name = []
-            data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+            data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                            dtype={'genome_id': object}, sep="\t")
 
             if f_all:
@@ -509,7 +509,7 @@ def extract_info(fscore,f_SSMA,f_SSSA,f_MSMA_discrete,f_MSMA_conMix,f_MSMA_conLO
         if f_MSMA_conMix and f_split_species:
 
             merge_name = []
-            data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+            data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                            dtype={'genome_id': object}, sep="\t")
             if f_all:
                 list_species = data.index.tolist()[:-1]
@@ -611,7 +611,7 @@ def extract_info(fscore,f_SSMA,f_SSSA,f_MSMA_discrete,f_MSMA_conMix,f_MSMA_conLO
     elif f_MSMA_conLOO:
 
         merge_name = []
-        data = pd.read_csv('./data/PATRIC/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
+        data = pd.read_csv('./data/NCBI/meta/'+str(level)+'_multi-species_summary.csv', index_col=0,
                        dtype={'genome_id': object}, sep="\t")
         if f_all:
             list_species = data.index.tolist()[:-1]

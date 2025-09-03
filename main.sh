@@ -30,7 +30,7 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 ### To install pytorch compatible with your CUDA version, please fellow this instruction: https://pytorch.org/get-started/locally/.
 ### Our code was tested with pytorch v1.7.1, with CUDA Version: 10.1 and 11.0 .
 #
-bash ./install/install.sh
+#bash ./install/install.sh
 echo "Please check if Env created."
 #-------------------------------------------
 #2.PATRIC Data
@@ -39,7 +39,7 @@ echo "Please check if Env created."
 ### You don't need to create the benchmarking datasets, we have incorporated them in this GitHub repo
 
 ## 2.1 PATRIC Data download
-bash ./scripts/data_preprocess/retrieve_PATRIC_data.sh ${dataset_location}
+#bash ./scripts/data/retrieve_PATRIC_data.sh ${dataset_location}
 
 
 
@@ -66,8 +66,8 @@ cd ${SCRIPTPATH}
 
 #### Reference database version 2021-05-06. You can also downlaoding the latest version from the ResFinder website.
 cd ./AMR_software/resfinder
-unzip db_pointfinder.zip
-unzip db_resfinder.zip
+echo -e A | unzip db_pointfinder.zip
+echo -e A | unzip db_resfinder.zip
 cd ${SCRIPTPATH}
 
 ###index Point-/ResFinder databases with KMA
@@ -79,8 +79,6 @@ python3 INSTALL.py ${SCRIPTPATH}/AMR_software/resfinder/cge/kma/kma non_interact
 cd ${SCRIPTPATH}
 
 bash ./scripts/model/resfinder.sh
-
-
 
 
 
@@ -96,16 +94,17 @@ bash ./scripts/model/resfinder.sh
 
 #### 4.1 single-species single-antibiotics
 bash ./scripts/model/AytanAktug_SSSA.sh
+exit
 #
 #### 4.2 single-species multi-antibiotics
-bash ./scripts/model/AytanAktug_SSMA.sh
+#bash ./scripts/model/AytanAktug_SSMA.sh
 
 ###4.3 discrete databases multi-species model
-bash ./scripts/model/AytanAktug_MSMA_discrete.sh
+#bash ./scripts/model/AytanAktug_MSMA_discrete.sh
 
 ## 4.4 concatenated databases mixed(-species) multi-species model
 ### 4.5  concatenated databases leave-one(-species)-out multi-species model
-bash ./scripts/model/AytanAktug_MSMA_concat.sh
+#bash ./scripts/model/AytanAktug_MSMA_concat.sh
 
 
 
@@ -151,12 +150,13 @@ bash ./scripts/model/phenotypeseeker.sh
 ### Please install Kover 2.0 according to https://aldro61.github.io/kover/doc_installation.html or https://github.com/aldro61/kover
 ### We used the command line version in Linux.
 ###install
-source activate ${kover_env_name}
-cd ./AMR_software/Kover/
-bash ./install.sh
-conda deactivate
-cd ${SCRIPTPATH}
-bash ./scripts/model/kover.sh
+# COMMENTED OUT BY ALEX ALL OF THE FOLLOWING:
+# source activate ${kover_env_name}
+# cd ./AMR_software/Kover/
+# bash ./install.sh
+# conda deactivate
+# cd ${SCRIPTPATH}
+# bash ./scripts/model/kover.sh
 
 ###############################
 ##7. Software 6. ML baseline (majority)
@@ -167,8 +167,8 @@ bash ./scripts/model/majority.sh
 ########################################
 ###8. Kover, PhenotypeSeeker cross-species models.
 ########################################
-bash ./scripts/model/phenotypeseeker_MS.sh
-bash ./scripts/model/kover_MS.sh
+#bash ./scripts/model/phenotypeseeker_MS.sh
+#bash ./scripts/model/kover_MS.sh
 
 #-------------------------------------------
 #9. Main Analysis and Visualiztion

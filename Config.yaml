@@ -5,14 +5,14 @@
 ############################################################################################################################
 ###1. the location to download the PATRIC dataset to.  ~246G (Please change to your local address.)
 ###dataset_location: /vol/projects/BIFO/patric_genome
-dataset_location: /net/projects/BIFO/patric_genome
+dataset_location: ./ncbi_genome
 ###2. The path to store the direct results of each software and further visualization. (either sbsolute path or relative path)
 output_path: ./
 ###3. The path to store the tempary files (note: some software will generate large amount of temp files to 60G in the process,
 ###  if you run all species in parallel.  Either sbsolute path or relative path)
 log_path: ./
 ###4 . max cpu
-n_jobs: 20
+n_jobs: 4
 ###5. gpu possibility for Aytan-Aktug SSSA model, If set to False, parallelization on cpu will be applied;
 #  Otherwise, it will be applied on one gpu core sequentially.
 gpu_on: True
@@ -44,8 +44,10 @@ resfinder_env: res_env
 ###C. Advanced/optional parameters setting
 ############################################################################################################################
 ###1.  11 species for single-species models.
-species_list: Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Mycobacterium_tuberculosis, Campylobacter_jejuni, Enterococcus_faecium, Neisseria_gonorrhoeae
-species_list_phylotree: Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Campylobacter_jejuni, Enterococcus_faecium, Neisseria_gonorrhoeae
+# SPECIES OPTIONS:
+#escherichia_coli, staphylococcus_aureus, salmonella_enterica, klebsiella_pneumoniae, pseudomonas_aeruginosa, acinetobacter_baumannii, streptococcus_pneumoniae, campylobacter_jejuni, enterococcus_faecium, neisseria_gonorrhoeae
+species_list: escherichia_coli 
+species_list_phylotree: escherichia_coli 
 species_list_multi_antibiotics: Mycobacterium_tuberculosis, Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Neisseria_gonorrhoeae
 
 
@@ -64,3 +66,12 @@ cv_number_multiS: 6
 
 ### sample selection criteria: loose/trict. By default, we only benchmarked on the loosely selected dataset.
 QC_criteria: loose
+
+
+######### NCBI SPECIFIC ##########
+#Specify paths of existing NCBI data, with values copied over from the main.yaml hydra config
+# FOR NAGA: Use "/home/mila/n/naga-karthik.enamundram/scratch/amr_genomic_data"
+path_assemblies_root: "../amr_genomic_data" 
+# FOR NAGA: Use "/home/mila/n/naga-karthik.enamundram/genomicFMs/ncbi_resistance_phenotypes_asts/datasets_reinterpreted"
+path_datasets_reinterpreted: "./datasets" 
+

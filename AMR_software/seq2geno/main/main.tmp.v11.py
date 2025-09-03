@@ -21,9 +21,9 @@ import create_config
 assert 'SEQ2GENO_HOME' in os.environ, 'SEQ2GENO_HOME not available'
 sys.path.append(os.environ['SEQ2GENO_HOME'])
 sys.path.append(os.path.join(os.environ['SEQ2GENO_HOME'], 'main'))
-from Seq2GenoUtils import Warehouse
-from Seq2GenoUtils.Crane import Seq2Geno_Crane
-from PackOutput import SGOutputPacker
+#from Seq2GenoUtils import Warehouse
+#from Seq2GenoUtils.Crane import Seq2Geno_Crane
+#from PackOutput import SGOutputPacker
 from ZIP2Config import *
 
 
@@ -159,6 +159,7 @@ if __name__ == '__main__':
     # run in local machine
     main(args, logger)
     # pack the results or not?
+    '''
     if args.dryrun != 'Y':
         if primary_args.pack_output == 'none':
             logger.info('Not packing the results')
@@ -185,9 +186,10 @@ if __name__ == '__main__':
                 raise IOError('zip not created')
 
             # submit the data to Geno2Pheno server
-            if primary_args.pack_output == 'g2p' and primary_args.to_gp:
-                c = Seq2Geno_Crane(logger=logger)
-                c.choose_materials(output_zip)
-                c.launch()
+#            if primary_args.pack_output == 'g2p' and primary_args.to_gp:
+#                c = Seq2Geno_Crane(logger=logger)
+#                c.choose_materials(output_zip)
+#                c.launch()
             
-        logger.info('DONE (local mode)')
+ #       logger.info('DONE (local mode)')
+    '''
