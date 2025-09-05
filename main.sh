@@ -94,7 +94,6 @@ bash ./scripts/model/resfinder.sh
 
 #### 4.1 single-species single-antibiotics
 bash ./scripts/model/AytanAktug_SSSA.sh
-exit
 #
 #### 4.2 single-species multi-antibiotics
 #bash ./scripts/model/AytanAktug_SSMA.sh

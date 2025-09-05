@@ -68,8 +68,8 @@ def create_quality_files():
             quality_df = quality_df.append(new_row, ignore_index=True)
         
         # Save the quality dataset to a file
-        quality_df.to_csv(f"{PATH_OUT}/quality/{sp}.csv", sep="\t", index=False)
-        print(f"{sp}.csv created successfully.")
+        quality_df.to_csv(f"{PATH_OUT}/quality/{sp.replace(' ', '_')}.csv", sep="\t", index=False)
+        print(f"{sp.replace(' ', '_')}.csv created successfully.")
 
 if __name__ == "__main__":
     # Add argument to override PATH_DATASETS_REINTERPRETED

@@ -197,16 +197,16 @@ def filter_phenotype(level,f_balance):
 
 
         ###  Address duplicate datasets arising from antibiotic alias issues
-        if species=='Streptococcus pneumoniae':
-            ## these two (cotrimoxazole and trimethoprim/sulfamethoxazole) were not merged
-            ## and either were equipped with enough data samples. so we remove one of them
-            select_antibiotic_final.remove('cotrimoxazole') #Mar,2022. as 'cotrimoxazole' ='trimethoprim/sulfamethoxazole'
-            select_antibiotic_final.remove('beta-lactam') #April,2022. as beta-lactam class includes multiple antibiotics.
+        # if species=='Streptococcus pneumoniae':
+        #     ## these two (cotrimoxazole and trimethoprim/sulfamethoxazole) were not merged
+        #     ## and either were equipped with enough data samples. so we remove one of them
+        #     select_antibiotic_final.remove('cotrimoxazole') #Mar,2022. as 'cotrimoxazole' ='trimethoprim/sulfamethoxazole'
+        #     select_antibiotic_final.remove('beta-lactam') #April,2022. as beta-lactam class includes multiple antibiotics.
 
-        if species=='Mycobacterium tuberculosis':
-            ## not merged.
-            ## May,2023. as 'rifampicin' ='trifampin'
-            select_antibiotic_final.remove('rifampin')
+        # if species=='Mycobacterium tuberculosis':
+        #     ## not merged.
+        #     ## May,2023. as 'rifampicin' ='trifampin'
+        #     select_antibiotic_final.remove('rifampin')
 
 
         Species_quality.at[species,'modelling antibiotics']= select_antibiotic_final
