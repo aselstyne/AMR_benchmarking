@@ -33,6 +33,9 @@ def create_dataset_NCBI():
     mega_df.rename(columns=column_mapping, inplace=True)
     mega_df = mega_df[list(column_mapping.values())]
 
+    # Capitalize the first letter of each genome_name, and replace underscores with spaces
+    mega_df['genome_name'] = mega_df['genome_name'].str.replace('_', ' ').str.capitalize()
+
     if not mega_df.empty:
         mega_df.to_csv(f"{PATH_OUT}/NCBI_genomes_AMR.txt", sep="\t", index=False)
         print("NCBI_genomes_AMR.txt created successfully.")
@@ -76,4 +79,5 @@ if __name__ == "__main__":
     PATH_DATASETS_REINTERPRETED = args.path_datasets_reinterpreted
 
     # Run main script
+    create_dataset_NCBI()
     create_quality_files()

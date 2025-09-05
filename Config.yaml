@@ -45,9 +45,9 @@ resfinder_env: res_env
 ############################################################################################################################
 ###1.  11 species for single-species models.
 # SPECIES OPTIONS:
-#escherichia_coli, staphylococcus_aureus, salmonella_enterica, klebsiella_pneumoniae, pseudomonas_aeruginosa, acinetobacter_baumannii, streptococcus_pneumoniae, campylobacter_jejuni, enterococcus_faecium, neisseria_gonorrhoeae
-species_list: escherichia_coli 
-species_list_phylotree: escherichia_coli 
+#Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Campylobacter_jejuni, Enterococcus_faecium, Neisseria_gonorrhoeae
+species_list: Escherichia_coli 
+species_list_phylotree: Escherichia_coli 
 species_list_multi_antibiotics: Mycobacterium_tuberculosis, Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Neisseria_gonorrhoeae
 
 

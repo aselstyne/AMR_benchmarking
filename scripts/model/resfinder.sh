@@ -32,8 +32,9 @@ species_tree=( "${species_list_temp_tree[@]//_/ }" )
 
 source activate ${resfinder_env}
 wait
-# echo "Point-/Resfinder blastn version:"
-# python ./AMR_software/resfinder/main_run_blastn.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit; }
+
+echo "Point-/Resfinder blastn version:"
+python ./AMR_software/resfinder/main_run_blastn.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit; }
 
 echo "Point-/Resfinder KMA version:"
 python ./AMR_software/resfinder/main_run_kma.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit; }
