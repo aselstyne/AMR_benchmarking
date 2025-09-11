@@ -11,7 +11,11 @@ PATH_OUT = "./data/NCBI"
 def create_dataset_NCBI():
     # Search all subfolders for SR_filt.csv files
     csv_files = list(Path(PATH_DATASETS_REINTERPRETED).glob('**/*SR_filt.csv'))
-    print(f"Found {len(csv_files)} CSV files.")
+    print(f"Found {len(csv_files)} CSV files, combining...")
+
+    if not csv_files:
+        print("No CSV files found. Exiting.")
+        exit()
 
     # Read and concatenate all CSV files
     mega_df = pd.DataFrame()
@@ -36,6 +40,9 @@ def create_dataset_NCBI():
     # Capitalize the first letter of each genome_name, and replace underscores with spaces
     mega_df['genome_name'] = mega_df['genome_name'].str.replace('_', ' ').str.capitalize()
 
+    # Drop "GCA_" from the start of all genome_id entries
+    mega_df['genome_id'] = mega_df['genome_id'].str.replace('GCA_', '')
+
     if not mega_df.empty:
         mega_df.to_csv(f"{PATH_OUT}/NCBI_genomes_AMR.txt", sep="\t", index=False)
         print("NCBI_genomes_AMR.txt created successfully.")
@@ -43,15 +50,18 @@ def create_dataset_NCBI():
 
 def create_quality_files():
     ''' Generate dummy quality files to bypass the quality filtering steps of the pipeline'''
+    print("\nGenerating dummy quality files...")
     # Check if the quality subfolder already exists, if not create it
     os.makedirs(f"{PATH_OUT}/quality", exist_ok=True)
 
-    # Load the NCBI_genomes_AMR.txt file
-    df = pd.read_csv(f"{PATH_OUT}/NCBI_genomes_AMR.txt", sep="\t")
-    
+    # Load the NCBI_genomes_AMR.txt file, keeping leading zeros in genome_id
+    df = pd.read_csv(f"{PATH_OUT}/NCBI_genomes_AMR.txt", sep="\t", dtype=str)
+
     # Define headings and values for top quality, to bypass filtering
-    headings = ["genome.genome_id", "genome.genome_name", "genome.genome_status", "genome.genome_length", "genome.genome_quality", "genome.plasmids", "genome.contigs", "genome.fine_consistency", "genome.coarse_consistency", "genome.checkm_completeness", "genome.checkm_contamination"]
-    values = [0, "placeholder", "WGS", 0, "Good", 0, 5, 100, 100, 100, 0]
+    # headings = ["genome.genome_id", "genome.genome_name", "genome.genome_status", "genome.genome_length", "genome.genome_quality", "genome.plasmids", "genome.contigs", "genome.fine_consistency", "genome.coarse_consistency", "genome.checkm_completeness", "genome.checkm_contamination"]
+    # values = [0, "placeholder", "WGS", 0, "Good", 0, 5, 100, 100, 100, 0]
+    headings = ["genome.genome_status", "genome.genome_length", "genome.genome_quality", "genome.plasmids", "genome.contigs", "genome.fine_consistency", "genome.coarse_consistency", "genome.checkm_completeness", "genome.checkm_contamination"]
+    values = ["WGS", 0, "Good", 0, 5, 100, 100, 100, 0]
 
     # Get a list of all different species in the dataset
     species = df['genome_name'].unique()
@@ -59,16 +69,27 @@ def create_quality_files():
     # Create a quality dataset for each species
     for sp in species:
         sp_df = df[df['genome_name'] == sp].copy()
+        # drop columns "antibiotic" and "resistant_phenotype"
+        sp_df = sp_df.drop(columns=['antibiotic', 'resistant_phenotype'])
+        # drop duplicate rows based on genome_id
+        sp_df = sp_df.drop_duplicates(subset=['genome_id'])
+        # add prefix "genome." to the column names
+        sp_df = sp_df.rename(columns=lambda x: f"genome.{x}")
+
+        # add the quality columns with the predefined values
+        for heading, value in zip(headings, values):
+            sp_df[heading] = value
+
         # Create a new dataframe with the new headings
-        quality_df = pd.DataFrame(columns=headings)
-        for row in sp_df.itertuples(index=False):
-            new_row = {heading: value for heading, value in zip(headings, values)}
-            new_row['genome.genome_id'] = row.genome_id
-            new_row['genome.genome_name'] = row.genome_name
-            quality_df = quality_df.append(new_row, ignore_index=True)
+        # quality_df = pd.DataFrame(columns=headings)
+        # for row in sp_df.itertuples(index=False):
+        #     new_row = {heading: value for heading, value in zip(headings, values)}
+        #     new_row['genome.genome_id'] = row.genome_id
+        #     new_row['genome.genome_name'] = row.genome_name
+        #     quality_df = quality_df.append(new_row, ignore_index=True)
         
         # Save the quality dataset to a file
-        quality_df.to_csv(f"{PATH_OUT}/quality/{sp.replace(' ', '_')}.csv", sep="\t", index=False)
+        sp_df.to_csv(f"{PATH_OUT}/quality/{sp.replace(' ', '_')}.csv", sep="\t", index=False)
         print(f"{sp.replace(' ', '_')}.csv created successfully.")
 
 if __name__ == "__main__":

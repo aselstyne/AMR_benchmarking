@@ -71,7 +71,7 @@ QC_criteria: loose
 ######### NCBI SPECIFIC ##########
 #Specify paths of existing NCBI data, with values copied over from the main.yaml hydra config
 # FOR NAGA: Use "/home/mila/n/naga-karthik.enamundram/scratch/amr_genomic_data"
-path_assemblies_root: "../amr_genomic_data" 
+path_assemblies_root: "../../amr_genomic_data" 
 # FOR NAGA: Use "/home/mila/n/naga-karthik.enamundram/genomicFMs/ncbi_resistance_phenotypes_asts/datasets_reinterpreted"
-path_datasets_reinterpreted: "./datasets" 
+path_datasets_reinterpreted: "../datasets" 
 

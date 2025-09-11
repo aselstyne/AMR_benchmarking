@@ -9,6 +9,10 @@ if not sys.warnoptions:
 
 
 def extract_info(id_list,feature,pheno,output):
+	# id_list='./data/NCBI/meta/loose_by_species/Data_Escherichia_coli_cefepime' # list of assembly IDs in file
+    # feature='./log/software/AytanAktug/software_output/SSSA/Escherichia_coli/cefepime_res_point.txt'
+    # pheno='./log/software/AytanAktug/software_output/SSSA/Escherichia_coli/cefepime_pheno.txt'
+    # output='./log/software/AytanAktug/software_output/SSSA/Escherichia_coli/cefepime'
 	##the script output is the same ordered input and output files without sample IDS, and sample names
 	##will be produced as a separate file. 
 
@@ -26,6 +30,10 @@ def extract_info(id_list,feature,pheno,output):
 
 
 	#Note: force the data_x 's order in according with id_list
+	with open(feature) as f:
+		first_line = f.readlines()
+		print(first_line)
+	exit()
 	feature = np.genfromtxt(feature, dtype="str")
 	print('feature shape', feature.shape)
 	n_feature = feature.shape[1] - 1

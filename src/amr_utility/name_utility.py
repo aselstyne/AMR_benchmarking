@@ -258,7 +258,7 @@ def GETname_S2Gfeature(species,temp_path,k):
 # ======================
 def GETname_AAfeatureSSSA(software,level,species, anti,temp_path):
     '''Single-species-antibiotic model'''
-    save_name_ID=GETname_meta(species,anti,level)
+    save_name_ID=GETname_meta(species,anti,level) #'./data/NCBI/meta/loose_by_species/Data_Escherichia_coli_cefepime'
 
     save_name_meta=save_name_ID+'_pheno.txt'
     path_feature = temp_path+'log/software/' + str(software)+'/software_output/SSSA/'+str(species.replace(" ", "_")) # all feature temp data(except large files)

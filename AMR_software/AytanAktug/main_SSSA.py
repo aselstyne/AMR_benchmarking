@@ -51,6 +51,10 @@ def MatchingIo(species,anti,temp_path,level):
     save_name_ID,save_name_meta,anti_list,path_cluster,path_cluster_results,path_cluster_temp,path_metadata_pheno,path_res_result,path_point_repre_results,\
                    path_res_repre_results,path_mutation_gene_results,path_x_y,path_x,path_y,path_name=\
                     name_utility.GETname_AAfeatureSSSA('AytanAktug',level,species, anti,temp_path)
+    # save_name_ID='./data/NCBI/meta/loose_by_species/Data_Escherichia_coli_cefepime' # list of assembly IDs in file
+    # path_mutation_gene_results='./log/software/AytanAktug/software_output/SSSA/Escherichia_coli/cefepime_res_point.txt'
+    # path_metadata_pheno='./log/software/AytanAktug/software_output/SSSA/Escherichia_coli/cefepime_pheno.txt'
+    # path_x_y='./log/software/AytanAktug/software_output/SSSA/Escherichia_coli/cefepime'
     merge_input_output_files.extract_info(save_name_ID,path_mutation_gene_results,path_metadata_pheno,path_x_y)
 
 def RedirectPrint(file):
@@ -82,8 +86,6 @@ def extract_info(path_sequence,s,level,f_initialize,f_pre_cluster,f_res,f_merge_
 
     main_meta,_=name_utility.GETname_main_meta(level) # level=loose, main_meta='./data/NCBI/meta/'+str(level)+'_Species_antibiotic_FineQuality.csv'
     data = pd.read_csv(main_meta, index_col=0, dtype={'genome_id': object}, sep="\t") 
-    print(data)
-    print(s)
     # # Convert species names to lowercase with underscores instead of spaces
     # s_index = [item.lower().replace(' ', '_') for item in s] 
     if f_all == False:

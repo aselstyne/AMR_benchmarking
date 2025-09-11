@@ -21,10 +21,15 @@ export PATH=$( dirname $( dirname $( which conda ) ) )/bin:$PATH
 export PYTHONPATH=$PWD
 source activate ${amr_env_name}
 
+echo "Starting NCBI data preprocessing..."
 python ./src/data_preprocess/chandar_create_dataset.py --path_datasets_reinterpreted ${path_datasets_reinterpreted}
+sleep 3
+
+echo -e "\nMaking symlinks for assemblies..."
 python ./src/data_preprocess/chandar_create_symlinks.py --path_assemblies_root ${path_assemblies_root}
+sleep 3
 
-
+echo -e "\nStarting Quality Control..."
 python ./src/data_preprocess/chandar_preprocess.py -l ${QC_criteria} -temp ${log_path}|| { echo "Errors in QC. Exit ."; exit; }
 
 

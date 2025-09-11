@@ -11,12 +11,15 @@ if not sys.warnoptions:
 
 
 def extract_info(point_path,res_path,output):
+	# output is the res_point.txt file
+	# point_path= _mutations.txt file
+	#res_path= _acquired_genes.txt file
 
 	##this script aims to merge pointfinder data and resfinder data into a file
 
 
-	snps = np.genfromtxt(point_path, dtype = "str")
-	genes = np.genfromtxt(res_path, dtype= "str")
+	snps = np.genfromtxt(point_path, dtype = "str") # a list, beginning with GCA
+	genes = np.genfromtxt(res_path, dtype= "str") # 3 columns: assembly ID, gene name, and coverage (?)
 
 	uniq_genes = []
 	for each in genes[:,1]:

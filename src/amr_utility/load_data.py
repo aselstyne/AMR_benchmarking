@@ -82,7 +82,6 @@ def extract_info(s,balance,level):
 
     for df_species,antibiotics in zip(df_species, antibiotics):
         # The df appears to be of length 1 most of the time at least
-        print("INNER" + df_species)
         antibiotics, ID_list, Y=model(df_species, antibiotics,balance,level)
 
     return antibiotics,ID_list,Y
@@ -93,7 +92,6 @@ if __name__ == "__main__":
     df_species = data.index.tolist() # This is a dataframe of 3 columns: species name, number of applicable drugs, list of applicable drugs.
 
     for species in df_species[:1]:
-        print("OUTER" + species)
 
         antibiotics, ID_list, Y =  extract_info(species, False, "loose")
         print(antibiotics)

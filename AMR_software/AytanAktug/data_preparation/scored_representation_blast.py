@@ -14,6 +14,8 @@ if not sys.warnoptions:
 
 
 def extract_info(input_path,file,out_path,mutcol,f_no_zip):
+	# _mutations.txt is the out_path for this function
+	# file has the list of sample IDs: './data/NCBI/meta/loose_by_species/Data_Escherichia_coli_cefepime'
 
 	##this script analyses all the pointfinder results
 	##takes the pointfinder input and does blosum coding
@@ -45,7 +47,7 @@ def extract_info(input_path,file,out_path,mutcol,f_no_zip):
 	nucleotide[("C", "N")] = 0
 	nucleotide[("N", "N")] = 0
 
-	list_point = np.genfromtxt(file, dtype='str')
+	list_point = np.genfromtxt(file, dtype='str') # List of samples, GCA_00...
 
 	##be sure there is no undesired file
 

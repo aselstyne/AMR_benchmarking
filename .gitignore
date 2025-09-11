@@ -1,4 +1,4 @@
-sbatch_baselines.sh
+sbatch_*
 resfinder_acc_alex.py
 
 ncbi_genome

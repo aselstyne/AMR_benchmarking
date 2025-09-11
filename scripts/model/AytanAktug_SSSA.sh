@@ -23,8 +23,9 @@ eval $(parse_yaml Config.yaml)
 export PATH=$( dirname $( dirname $( which conda ) ) )/bin:$PATH
 export PATH=~/miniconda2/bin:$PATH
 export PYTHONPATH=$PWD
-source activate ${multi_env_name}
-#source activate ${multi_torch_env_name}
+#source activate ${multi_env_name}
+source activate ${multi_torch_env_name}
+
 wait
 echo $CONDA_DEFAULT_ENV
 IFS=', ' read -ra species_list_temp <<< "$species_list" # This is the list of 11 strings of species names
@@ -42,27 +43,27 @@ echo "Finished: initialize."
 # ## Folds are provide in ./data/PATRIC/cv_folds
 ### if you want to generate the CV folds again, uncomment following block:
 ############################################################################
-###install kma_clustering
-#SCRIPT=$(realpath "$0")
-#SCRIPTPATH=$(dirname "$SCRIPT")
-#cd ./AMR_software/AytanAktug/cluster_preparation
-#gcc -O3 -o kma_clustering kma_clustering.c -lm -lz
-#mv kma_clustering ~/bin/
-#cd SCRIPTPATH
-#cd ../..
-#
-#python ./AMR_software/AytanAktug/main_SSSA.py -f_pre_cluster -path_sequence ${dataset_location} -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug pre-clustering. Exit ."; exit; }
-#echo "Finished: merge_scaffold."
-##
-###
-#for s in "${species_list_temp[@]}"; \
-#do bash ./AMR_software/AytanAktug/cluster_preparation/cluster_SSSA.sh ${s} ${log_path};done || { echo "Errors in Aytan-Aktug KMA clustering. Exit ."; exit; }
-#echo "Finished: clustering."
+##install kma_clustering
+SCRIPT=$(realpath "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+cd ./AMR_software/AytanAktug/cluster_preparation
+gcc -O3 -o kma_clustering kma_clustering.c -lm -lz -Wno-unused-result
+mv kma_clustering ~/bin/
+cd $SCRIPTPATH
+cd ../..
+
+python ./AMR_software/AytanAktug/main_SSSA.py -f_pre_cluster -path_sequence ${dataset_location} -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug pre-clustering. Exit ."; exit; }
+echo "Finished: merge_scaffold."
 #
 ##
-#python ./src/cv_folds/generate_random_folds.py -s 'Mycobacterium tuberculosis' -l ${QC_criteria} -cv ${cv_number}|| { echo "Errors in folds regenerating. Exit ."; exit; }
-#python ./src/cv_folds/prepare_folds.py -f_kma -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number} -temp ${log_path}|| { echo "Errors in folds regenerating. Exit ."; exit; }
-#echo "Folds regenerated."
+for s in "${species_list_temp[@]}"; \
+do bash ./AMR_software/AytanAktug/cluster_preparation/cluster_SSSA.sh ${s} ${log_path};done || { echo "Errors in Aytan-Aktug KMA clustering. Exit ."; exit; }
+echo "Finished: clustering."
+
+#
+python ./src/cv_folds/generate_random_folds.py -s 'Mycobacterium tuberculosis' -l ${QC_criteria} -cv ${cv_number}|| { echo "Errors in folds regenerating. Exit ."; exit; }
+python ./src/cv_folds/prepare_folds.py -f_kma -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number} -temp ${log_path}|| { echo "Errors in folds regenerating. Exit ."; exit; }
+echo "Folds regenerated."
 ############################################################################
 
 

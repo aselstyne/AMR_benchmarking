@@ -7,7 +7,7 @@ Config.yaml comes from the parent repository and has a variety of variables.
 - Section A can mostly be left alone for our purposes.
 - Ensure that none of the listed conda env names in section "B" conflict with any you already have. If so, change the values in Config.yaml before proceeding.
 - Section C is where you specify which species you want to run the baselines on. Update as you please. The selected species must be present in `data/NCBI/meta/loose_Species_antibiotic_FineQuality.csv`. If you want to limit the drugs tested, change the content of that file. Some species/drugs are not included in the file as they did not meet the minimum 200 samples threshold.
-- The NCBI specific values at the end of the file need to be updated to match your values from the hydra config in our `amr_pred` repo. These values are used to preprocess the dataset to match the PATRIC format.
+- The NCBI specific values at the end of the file need to be updated to match your values from the hydra config in our `amr_pred` repo. These values are used to preprocess the dataset to match the PATRIC format. Ensure you adjust the paths to match the new working directory of `AMR_benchmarking` if relative paths were used.
 
 ### 2. Install conda environments
 From the root of the repository (which you will need as your working directory for all the other scripts as well), run `bash ./install/install.sh`. This should create the 9 new conda environments. Ensure there are no errors in installation. Pytorch needs to be installed manually in the `multi_torch_env`, simply activate the environment and `pip3 install torch torchvision` (for the Mila cluster, with GPU support).

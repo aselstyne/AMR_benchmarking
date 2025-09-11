@@ -40,7 +40,7 @@ def criteria(species, df,level):
 def extract_id_quality(temp_path,level):
     '''
     input: read the downloaded quality metadata, saved at the subdirectory: /quality.
-    output: of the 13 previously selected species, select species with more than 200 good-quality genomes;
+    output: of the 13 previously selected species, select species with more than 100 good-quality genomes;
     and corresponding genome list.
     '''
 

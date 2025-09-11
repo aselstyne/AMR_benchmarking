@@ -78,7 +78,7 @@ cd ./AMR_software/resfinder/db_pointfinder
 python3 INSTALL.py ${SCRIPTPATH}/AMR_software/resfinder/cge/kma/kma non_interactive
 cd ${SCRIPTPATH}
 
-bash ./scripts/model/resfinder.sh
+# bash ./scripts/model/resfinder.sh
 
 
 
@@ -93,7 +93,8 @@ bash ./scripts/model/resfinder.sh
 ##############################
 
 #### 4.1 single-species single-antibiotics
-bash ./scripts/model/AytanAktug_SSSA.sh
+#bash ./scripts/model/AytanAktug_SSSA.sh
+
 #
 #### 4.2 single-species multi-antibiotics
 #bash ./scripts/model/AytanAktug_SSMA.sh
@@ -141,6 +142,7 @@ bash ./scripts/model/seq2geno.sh #Run.
 ##6. Software 4. Phenotyperseeker
 ###############################
 bash ./scripts/model/phenotypeseeker.sh
+exit
 
 #
 ###############################
