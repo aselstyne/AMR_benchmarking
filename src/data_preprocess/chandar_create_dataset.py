@@ -99,6 +99,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     PATH_DATASETS_REINTERPRETED = args.path_datasets_reinterpreted
 
+    # Create the output directory if it doesn't exist
+    os.makedirs(PATH_OUT, exist_ok=True)
+    os.makedirs(f"{PATH_OUT}/meta", exist_ok=True)
+    os.makedirs(f"{PATH_OUT}/quality", exist_ok=True)
+    os.makedirs(f"{PATH_OUT}/cv_folds", exist_ok=True)
     # Run main script
     create_dataset_NCBI()
     create_quality_files()

@@ -30,10 +30,6 @@ def extract_info(id_list,feature,pheno,output):
 
 
 	#Note: force the data_x 's order in according with id_list
-	with open(feature) as f:
-		first_line = f.readlines()
-		print(first_line)
-	exit()
 	feature = np.genfromtxt(feature, dtype="str")
 	print('feature shape', feature.shape)
 	n_feature = feature.shape[1] - 1

@@ -99,19 +99,19 @@ def filter_phenotype(level,f_balance):
 
         ### 2. Since the genomes selected after quality control  consist of a mix of those with and lacking AMR metadata,
         ### our initial step involves obtaining the intersection of high-quality genomes and those with AMR metadata.
-        save_all_quality,save_quality=name_utility.GETname_quality(species,level)
-        genome_OneSpecies = genome_amr[genome_amr['species'] == species]
+        save_all_quality,save_quality=name_utility.GETname_quality(species,level) # save_quality = "./data/NCBI/meta/fine_quality/GenomeFineQuality_" +str(level)+'_'+ str(species.replace(" ", "_")) + '.txt'
+        genome_OneSpecies = genome_amr[genome_amr['species'] == species] # list of all genomes
         df = pd.read_csv(save_quality,dtype={'genome.genome_id': object, 'genome.genome_name': object}, index_col=0,sep="\t")
-        id_GoodQuality=df['genome.genome_id']
+        id_GoodQuality=df['genome.genome_id'] # list of good quality genomes
         genome_OneSpecies=genome_OneSpecies[genome_OneSpecies['genome_id'].isin(id_GoodQuality)]
 
         ### 3. replace amoxicillin-clavulanate'	with 'amoxicillin/clavulanic acid'
         genome_OneSpecies=genome_OneSpecies.replace('amoxicillin-clavulanate', 'amoxicillin/clavulanic acid') # two names for the same antibiotic
 
-        ## 4. select the antibiotic with genome_id.count >200
+        ## 4. select the antibiotic with genome_id.count >100
         genome_OneSpecies_ = genome_OneSpecies.groupby(by="antibiotic")['genome_id']
         summary = genome_OneSpecies_.count().to_frame()
-        summary = summary[summary['genome_id'] > 200]
+        summary = summary[summary['genome_id'] > 100]
 
         ### 5. some genomes are annotated with different resistant_phenotype for the same antibiotic.
         ### These genomes are surely ill-annotated, and should be excluded via BAD list.
@@ -143,57 +143,61 @@ def filter_phenotype(level,f_balance):
             genome_OneSpeciesAnti.resistant_phenotype = [pheno[item] for item in genome_OneSpeciesAnti.resistant_phenotype]
             # check data balance
             balance_check = genome_OneSpeciesAnti.groupby(by="resistant_phenotype").count()
-            if balance_check.index.shape[0] == 2:# there is Neisseria gonorrhoeae w.r.t. ceftriaxone, no R pheno.
-                balance_ratio = balance_check.iloc[0]['genome_id'] / balance_check.iloc[1]['genome_id']
-                if min(balance_check.iloc[0]['genome_id'], balance_check.iloc[1]['genome_id']) <100:
-                    select_antibiotic_final.remove(anti)
-                else:
-                    ## save the ID for each species and each antibiotic
-                    ## note: some species-antibiotic combinations will be removed after processing BAD, later.
-                    genome_OneSpeciesAnti.to_csv(save_name_modelID + '_pheno.txt', sep="\t") #dataframe with metadata
-                    genome_OneSpeciesAnti['genome_id'].to_csv(save_name_modelID, sep="\t", index=False, header=False)
 
-                    ############################################################################################################
-                    ######## currently, this downsampling precedure is not applied in our study.
-                    if (f_balance== True) and (balance_ratio > 2 or balance_ratio < 0.5):# #final selected, need to downsample.
-                        # if not balance, downsampling
-                        print('Downsampling starts.....balance_ratio=', balance_ratio)
-                        label_down = balance_check.idxmax().to_numpy()[0]
-                        label_keep = balance_check.idxmin().to_numpy()[0]
-                        print( 'label_down:', label_down)
-                        data_draw = genome_OneSpeciesAnti[genome_OneSpeciesAnti['resistant_phenotype'] == str(label_down)]
-                        data_left = genome_OneSpeciesAnti[genome_OneSpeciesAnti['resistant_phenotype'] != str(label_down)]
-                        data_drew = data_draw.sample(n=int(1.5 * balance_check.loc[str(label_keep), 'genome_id']))
-                        genome_OneSpeciesAnti_downsampling = pd.concat([data_drew, data_left], ignore_index=True, sort=False)
-                        balance_check = genome_OneSpeciesAnti_downsampling.groupby(by="resistant_phenotype").count()
-                        print('Check phenotype balance after downsampling.', balance_check)
-                        balance_check.to_csv(save_name_modelID + 'balance_check.txt', mode='a', sep="\t")
-                    else:
-                        pass
-                    ############################################################################################################
-            else:
-                select_antibiotic_final.remove(anti)
+            genome_OneSpeciesAnti.to_csv(save_name_modelID + '_pheno.txt', sep="\t") #dataframe with metadata
+            genome_OneSpeciesAnti['genome_id'].to_csv(save_name_modelID, sep="\t", index=False, header=False)
+            # if balance_check.index.shape[0] == 2:# there is Neisseria gonorrhoeae w.r.t. ceftriaxone, no R pheno.
+            #     balance_ratio = balance_check.iloc[0]['genome_id'] / balance_check.iloc[1]['genome_id']
+            #     if min(balance_check.iloc[0]['genome_id'], balance_check.iloc[1]['genome_id']) <100:
+            #         select_antibiotic_final.remove(anti)
+            #     else:
+            #         ## save the ID for each species and each antibiotic
+            #         ## note: some species-antibiotic combinations will be removed after processing BAD, later.
+            #         genome_OneSpeciesAnti.to_csv(save_name_modelID + '_pheno.txt', sep="\t") #dataframe with metadata
+            #         genome_OneSpeciesAnti['genome_id'].to_csv(save_name_modelID, sep="\t", index=False, header=False)
+
+            #         ############################################################################################################
+            #         ######## currently, this downsampling precedure is not applied in our study.
+            #         if (f_balance== True) and (balance_ratio > 2 or balance_ratio < 0.5):# #final selected, need to downsample.
+            #             # if not balance, downsampling
+            #             print('Downsampling starts.....balance_ratio=', balance_ratio)
+            #             label_down = balance_check.idxmax().to_numpy()[0]
+            #             label_keep = balance_check.idxmin().to_numpy()[0]
+            #             print( 'label_down:', label_down)
+            #             data_draw = genome_OneSpeciesAnti[genome_OneSpeciesAnti['resistant_phenotype'] == str(label_down)]
+            #             data_left = genome_OneSpeciesAnti[genome_OneSpeciesAnti['resistant_phenotype'] != str(label_down)]
+            #             data_drew = data_draw.sample(n=int(1.5 * balance_check.loc[str(label_keep), 'genome_id']))
+            #             genome_OneSpeciesAnti_downsampling = pd.concat([data_drew, data_left], ignore_index=True, sort=False)
+            #             balance_check = genome_OneSpeciesAnti_downsampling.groupby(by="resistant_phenotype").count()
+            #             print('Check phenotype balance after downsampling.', balance_check)
+            #             balance_check.to_csv(save_name_modelID + 'balance_check.txt', mode='a', sep="\t")
+            #         else:
+            #             pass
+            #         ############################################################################################################
+            # else:
+            #     select_antibiotic_final.remove(anti)
 
 
-        ## check if samples with conflicting phenotype exit in other antibiotic groups
+        ## check if samples with conflicting phenotype exist in other antibiotic groups
         ## Although this kind of samples does not influence the other datasets, but we deem them as unreliable. Remove!
-        BAD=[j for sub in BAD for j in sub]
-        if BAD !=[]:
-            for anti in select_antibiotic_final:
-                save_name_modelID=name_utility.GETname_meta(species,anti,level)
-                genome_OneSpeciesAnti = pd.read_csv(save_name_modelID + '_pheno.txt', dtype={'genome_id': object}, index_col=0,sep="\t")
-                genome_OneSpeciesAnti = genome_OneSpeciesAnti[~genome_OneSpeciesAnti['genome_id'].isin(BAD)]
-                balance_check = genome_OneSpeciesAnti.groupby(by="resistant_phenotype").count()
-                if min(balance_check.iloc[0]['genome_id'], balance_check.iloc[1]['genome_id']) <100:
-                    ### remove previously saved datasets due to lack of enough genomes
-                    select_antibiotic_final.remove(anti)
-                    os.remove(save_name_modelID + '_pheno.txt')
-                    os.remove(save_name_modelID)
+        
+        # BAD=[j for sub in BAD for j in sub]
+        # if BAD !=[]:
+        #     for anti in select_antibiotic_final:
+        #         save_name_modelID=name_utility.GETname_meta(species,anti,level)
+        #         genome_OneSpeciesAnti = pd.read_csv(save_name_modelID + '_pheno.txt', dtype={'genome_id': object}, index_col=0,sep="\t")
+        #         genome_OneSpeciesAnti = genome_OneSpeciesAnti[~genome_OneSpeciesAnti['genome_id'].isin(BAD)]
+        #         balance_check = genome_OneSpeciesAnti.groupby(by="resistant_phenotype").count()
+        #         if min(balance_check.iloc[0]['genome_id'], balance_check.iloc[1]['genome_id']) <100:
+        #             ### remove previously saved datasets due to lack of enough genomes
+        #             select_antibiotic_final.remove(anti)
+        #             os.remove(save_name_modelID + '_pheno.txt')
+        #             os.remove(save_name_modelID)
 
-                else:#final selected. overwriting.
-                    # save the ID for each species and each antibiotic
-                    genome_OneSpeciesAnti.to_csv(save_name_modelID + '_pheno.txt', sep="\t") #dataframe with metadata
-                    genome_OneSpeciesAnti['genome_id'].to_csv(save_name_modelID, sep="\t", index=False, header=False)
+        #         else:#final selected. overwriting.
+        #             # save the ID for each species and each antibiotic
+        #             genome_OneSpeciesAnti.to_csv(save_name_modelID + '_pheno.txt', sep="\t") #dataframe with metadata
+        #             genome_OneSpeciesAnti['genome_id'].to_csv(save_name_modelID, sep="\t", index=False, header=False)
 
 
         ###  Address duplicate datasets arising from antibiotic alias issues

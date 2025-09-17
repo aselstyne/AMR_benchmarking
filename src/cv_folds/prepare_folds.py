@@ -1,4 +1,8 @@
 #!/usr/bin/python
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from src.amr_utility import file_utility,name_utility,load_data
 from src.cv_folds import cluster2folds
 import os,argparse
