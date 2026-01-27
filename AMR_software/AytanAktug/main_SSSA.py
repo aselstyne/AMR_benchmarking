@@ -22,6 +22,7 @@ def MergeScaffolds(path_sequence,species,anti,temp_path,level):
     save_name_ID,save_name_meta,anti_list,path_cluster,path_cluster_results,path_cluster_temp,path_metadata_pheno,path_res_result,path_point_repre_results,\
                    path_res_repre_results,path_mutation_gene_results,path_x_y,path_x,path_y,path_name=\
                     name_utility.GETname_AAfeatureSSSA('AytanAktug',level,species, anti,temp_path)
+    # save_name_ID='./data/NCBI/meta/loose_by_species/Data_Escherichia_coli_cefepime' # list of assembly IDs in file
     merge_scaffolds.extract_info(path_sequence,save_name_ID,path_cluster,16) #saved to path_temp_cluster + 'cluster'
 
 

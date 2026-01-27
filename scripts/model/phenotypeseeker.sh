@@ -28,9 +28,9 @@ export PYTHONPATH=$PWD
 
 ### Initialization
 source activate ${amr_env_name}
-python ./AMR_software/PhenotypeSeeker/main_pts.py -f_phylotree -f_prepare_meta -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}
-python ./AMR_software/PhenotypeSeeker/main_pts.py -f_kma -f_prepare_meta -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
-python ./AMR_software/PhenotypeSeeker/main_pts.py -f_prepare_meta -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
+python ./AMR_software/PhenotypeSeeker/main_pts.py -f_phylotree -f_prepare_meta -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -cv ${cv_number}
+# python ./AMR_software/PhenotypeSeeker/main_pts.py -f_kma -f_prepare_meta -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
+python ./AMR_software/PhenotypeSeeker/main_pts.py -f_prepare_meta -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number}
 conda deactivate
 
 
@@ -38,18 +38,22 @@ source activate ${PhenotypeSeeker_env_name}
 #### Prepare features
 for s in "${species_list_temp[@]}"; \
 do bash ./AMR_software/PhenotypeSeeker/kmer.sh ${dataset_location} ${log_path}  by_species_bq/id_${s};done
+echo "Finished: kmer counting."
 
 for s in "${species_list_temp_tree[@]}"; \
 do bash ./AMR_software/PhenotypeSeeker/map.sh ${s} ${log_path}log/software/phenotypeseeker/software_output \
 ${log_path}log/software/phenotypeseeker/software_output/phylotree ${dataset_location} ${log_path} -f_phylotree;done
+echo "Finished: phylotree mapping."
 #
-for s in "${species_list_temp[@]}"; \
-do bash ./AMR_software/PhenotypeSeeker/map.sh ${s} ${log_path}log/software/phenotypeseeker/software_output  \
-${log_path}log/software/phenotypeseeker/software_output/kma ${dataset_location} ${log_path} -f_kma;done
+# for s in "${species_list_temp[@]}"; \
+# do bash ./AMR_software/PhenotypeSeeker/map.sh ${s} ${log_path}log/software/phenotypeseeker/software_output  \
+# ${log_path}log/software/phenotypeseeker/software_output/kma ${dataset_location} ${log_path} -f_kma;done
+# echo "Finished: kma mapping."
 
 for s in "${species_list_temp[@]}"; \
 do bash ./AMR_software/PhenotypeSeeker/map.sh ${s} ${log_path}log/software/phenotypeseeker/software_output  \
 ${log_path}log/software/phenotypeseeker/software_output/random ${dataset_location} ${log_path};done
+echo "Finished: random mapping."
 
 conda deactivate
 #
@@ -57,14 +61,14 @@ conda deactivate
 source activate ${amr_env_name}
 wait
 python ./AMR_software/PhenotypeSeeker/main_pts.py -f_phylotree -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}
-python ./AMR_software/PhenotypeSeeker/main_pts.py -f_kma -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
+# python ./AMR_software/PhenotypeSeeker/main_pts.py -f_kma -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
 python ./AMR_software/PhenotypeSeeker/main_pts.py -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
 
 
 ## CV score generation.
 python ./src/analysis_utility/result_analysis.py -software 'phenotypeseeker' -f_phylotree  -cl_list 'svm' 'lr' 'rf' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species_tree[@]}" -l ${QC_criteria}
 
-python ./src/analysis_utility/result_analysis.py -software 'phenotypeseeker' -f_kma   -cl_list 'svm' 'lr' 'rf' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species[@]}" -l ${QC_criteria}
+# python ./src/analysis_utility/result_analysis.py -software 'phenotypeseeker' -f_kma   -cl_list 'svm' 'lr' 'rf' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species[@]}" -l ${QC_criteria}
 
 python ./src/analysis_utility/result_analysis.py -software 'phenotypeseeker'  -cl_list 'svm' 'lr' 'rf' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species[@]}" -l ${QC_criteria}
 

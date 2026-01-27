@@ -40,6 +40,7 @@ print(device)
 
 def eval(species, antibiotics, level, xdata, ydata,p_names, cv,f_scaler,f_fixed_threshold,f_no_early_stop,f_phylotree,
          f_kma,f_optimize_score,save_name_weights):
+    
 
     #data
     data_x = np.loadtxt(xdata, dtype="float")
@@ -73,8 +74,11 @@ def eval(species, antibiotics, level, xdata, ydata,p_names, cv,f_scaler,f_fixed_
 
     #fodls
     folds_txt=name_utility.GETname_folds(species,antibiotics,level,f_kma,f_phylotree)
+    print('folds_txt: ',folds_txt)
     folders_sample_name = json.load(open(folds_txt, "rb"))
     folders_sample=name2index.Get_index(folders_sample_name,p_names)
+
+    print('cv: ', cv)
 
 
     #hyper parameter range
@@ -82,6 +86,7 @@ def eval(species, antibiotics, level, xdata, ydata,p_names, cv,f_scaler,f_fixed_
     for out_cv in range(cv):
 
         train_val_samples= folders_sample[:out_cv] + folders_sample[out_cv+1 :]#list
+        print('length of train_val_samples:',len(train_val_samples))
         Validation_mcc_thresholds = []  #  inner CV *11 thresholds value
         Validation_f1_thresholds = []  #  inner CV *11 thresholds value
         Validation_auc = []  # inner CV

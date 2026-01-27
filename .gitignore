@@ -1,4 +1,3 @@
-sbatch_*
 resfinder_acc_alex.py
 
 ncbi_genome
@@ -7,9 +6,11 @@ log
 data/NCBI/
 
 .vscode
+.git.broken
 errs
 outs
 Results
+*.png
 
 AMR_software/resfinder/db_*
 __pycache__/

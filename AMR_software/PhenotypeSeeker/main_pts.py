@@ -39,7 +39,6 @@ def extract_info(s,kmer,f_all,f_prepare_meta,cv,level,n_jobs,f_ml,f_phylotree,f_
     antibiotics = data['modelling antibiotics'].tolist()
     file_utility.make_dir(temp_path+'log/software/phenotypeseeker/software_output/K-mer_lists') #for kmers
 
-
     if f_prepare_meta:
         # prepare the anti list and id list for each species, antibiotic, and CV folders.
         for species, antibiotics in zip(df_species, antibiotics):

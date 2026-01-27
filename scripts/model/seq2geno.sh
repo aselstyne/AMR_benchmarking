@@ -18,6 +18,12 @@ function parse_yaml {
 }
 eval $(parse_yaml Config.yaml)
 
+if [ -n "$1" ]; then
+   species_list="$1"
+   species_list_phylotree="$1"
+   echo "Species list provided as argument: $species_list"
+fi
+
 
 IFS=', ' read -ra species_list_temp <<< "$species_list"
 species=( "${species_list_temp[@]//_/ }" )
@@ -80,13 +86,13 @@ conda deactivate
 #########################################################################################################
 #### CV
 source activate ${amr_env_name}
-python ./AMR_software/seq2geno/main_s2p.py  -f_phylotree -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}
-python ./AMR_software/seq2geno/main_s2p.py  -f_kma -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
+# python ./AMR_software/seq2geno/main_s2p.py  -f_phylotree -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}
+# python ./AMR_software/seq2geno/main_s2p.py  -f_kma -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
 python ./AMR_software/seq2geno/main_s2p.py  -cv ${cv_number} -n_jobs ${n_jobs} -f_ml -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}
 
 
 #### CV score generation.
-python ./src/analysis_utility/result_analysis.py -software 'seq2geno' -f_phylotree -fscore 'f1_macro' -cl_list 'svm' 'lr' 'rf' 'lsvm' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species_tree[@]}" -l ${QC_criteria}
-python ./src/analysis_utility/result_analysis.py -software 'seq2geno' -f_kma -fscore 'f1_macro' -cl_list 'svm' 'lr' 'rf' 'lsvm' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species_tree[@]}" -l ${QC_criteria}
+# python ./src/analysis_utility/result_analysis.py -software 'seq2geno' -f_phylotree -fscore 'f1_macro' -cl_list 'svm' 'lr' 'rf' 'lsvm' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species_tree[@]}" -l ${QC_criteria}
+# python ./src/analysis_utility/result_analysis.py -software 'seq2geno' -f_kma -fscore 'f1_macro' -cl_list 'svm' 'lr' 'rf' 'lsvm' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species_tree[@]}" -l ${QC_criteria}
 python ./src/analysis_utility/result_analysis.py -software 'seq2geno'  -fscore 'f1_macro' -cl_list 'svm' 'lr' 'rf' 'lsvm' -cv ${cv_number} -temp ${log_path} -o ${output_path} -s "${species_tree[@]}" -l ${QC_criteria}
 

@@ -5,7 +5,7 @@
 ############################################################################################################################
 ###1. the location to download the PATRIC dataset to.  ~246G (Please change to your local address.)
 ###dataset_location: /vol/projects/BIFO/patric_genome MUST USE ABSOLUTE PATH
-dataset_location: /network/scratch/a/aselstya/amr/AMR_benchmarking/ncbi_genome
+dataset_location: /tmp/AMR_benchmarking/ncbi_genome
 ###2. The path to store the direct results of each software and further visualization. (either sbsolute path or relative path)
 output_path: ./
 ###3. The path to store the tempary files (note: some software will generate large amount of temp files to 60G in the process,
@@ -45,10 +45,10 @@ resfinder_env: res_env
 ############################################################################################################################
 ###1.  11 species for single-species models.
 # SPECIES OPTIONS:
-#Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Campylobacter_jejuni, Enterococcus_faecium, Neisseria_gonorrhoeae
-species_list: Escherichia_coli
-species_list_phylotree: Escherichia_coli
-species_list_multi_antibiotics: Escherichia_coli
+#Escherichia_coli, Staphylococcus_aureus, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Salmonella_enterica, Streptococcus_pneumoniae, Campylobacter_jejuni, Enterococcus_faecium, Neisseria_gonorrhoeae
+species_list: Pseudomonas_aeruginosa
+species_list_phylotree: Pseudomonas_aeruginosa
+species_list_multi_antibiotics: Pseudomonas_aeruginosa
 # Mycobacterium_tuberculosis, Escherichia_coli, Staphylococcus_aureus, Salmonella_enterica, Klebsiella_pneumoniae, Pseudomonas_aeruginosa, Acinetobacter_baumannii, Streptococcus_pneumoniae, Neisseria_gonorrhoeae
 
 
@@ -60,7 +60,7 @@ species_list_multi_species:  Mycobacterium_tuberculosis, Salmonella_enterica, St
 merge_name: Mt_Se_Sp_Ec_Sa_Kp_Ab_Pa_Cj
 
 ### CV settings for nested CV
-cv_number: 10
+cv_number: 5
 
 ### 5 CV folds + 1 hold out set. Only for Aytan-Aktug Multi-species model.
 cv_number_multiS: 6
