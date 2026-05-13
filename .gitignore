@@ -19,3 +19,8 @@ AMR_software/seq2geno/denovo/env/
 AMR_software/seq2geno/examples/example_input/
 
 kma/
+build/
+
+amr_benchmarking_transfer.tar.gz
+results_xgb_lgr_combined_20250923.csv
+chandar_best_results.csv

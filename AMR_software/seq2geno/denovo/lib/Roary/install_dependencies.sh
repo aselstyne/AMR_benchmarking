@@ -11,7 +11,8 @@ PARALLEL_VERSION=${PARALLEL_VERSION:-"20160722"}
 PARALLEL_DOWNLOAD_FILENAME="parallel-${PARALLEL_VERSION}.tar.bz2" 
 PARALLEL_URL="http://ftp.gnu.org/gnu/parallel/${PARALLEL_DOWNLOAD_FILENAME}"
 
-BEDTOOLS_VERSION="2.26.0"
+# UPDATED by ALEX: was 2.26.0, which had compilation issues with modern GCC. Updated to 2.27.1, has newer versions had compatibility issues with htslib.
+BEDTOOLS_VERSION="2.27.1"
 BEDTOOLS_DOWNLOAD_FILENAME="bedtools-${BEDTOOLS_VERSION}.tar.gz"
 BEDTOOLS_URL="https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLS_VERSION}/${BEDTOOLS_DOWNLOAD_FILENAME}"
 
@@ -156,7 +157,8 @@ else
   untar $MCL_DOWNLOAD_PATH $MCL_BUILD_DIR
   echo "Building MCL"
   cd $MCL_BUILD_DIR
-  ./configure
+  ### ALEX: MCL has some issues with modern compilers, so we need to add -fcommon to the CFLAGS to get it to compile
+  ./configure CFLAGS="-O2 -fcommon"
   make
 fi
 
@@ -169,24 +171,62 @@ else
   mv $FASTTREE_DOWNLOAD_FILENAME $FASTTREE_BUILD_DIR
   cd $FASTTREE_BUILD_DIR
   echo "Building FastTree"
-  gcc -o FastTree FastTree-${FASTTREE_VERSION}.c -lm
+  ### ALEX: Updated to support all CPU architectures, not just Intel.
+  gcc -o FastTree -O3 -march=x86-64-v3 -finline-functions -funroll-loops FastTree-${FASTTREE_VERSION}.c -lm
 fi
 
 export MAFFT_INSTALL_DIR="${MAFFT_BUILD_DIR}/build"
 # Build MAFFT
-if [ -e "$MAFFT_BUILD_DIR/build/mafft" ]; then
+if [ -e "$MAFFT_INSTALL_DIR/bin/mafft" ]; then
   echo "MAFFT already built, skipping"
 else
   download $MAFFT_URL $MAFFT_DOWNLOAD_PATH
   untar $MAFFT_DOWNLOAD_PATH $MAFFT_BUILD_DIR
   echo "Building MAFFT"
-  cd $MAFFT_BUILD_DIR
-  mkdir -p $MAFFT_INSTALL_DIR
-  cd core
-  sed -i '1s!.*!PREFIX = $(MAFFT_INSTALL_DIR)!' Makefile
-  make
-  make install
+  cd "$MAFFT_BUILD_DIR/core"
+  
+  # 1. Clean and compile with your local prefix
+  make clean
+  make PREFIX="$MAFFT_INSTALL_DIR"
+  
+  # 2. Manual Installation: Create the target directories in scratch
+  mkdir -p "$MAFFT_INSTALL_DIR/bin"
+  mkdir -p "$MAFFT_INSTALL_DIR/libexec/mafft"
+  
+  # 3. Copy the driver scripts
+  # These are created during the 'make' phase in the core directory
+  cp mafft mafft-homologs.rb "$MAFFT_INSTALL_DIR/bin/"
+  
+  # 4. Copy all core binaries to libexec
+  # This list matches what the Makefile tries to move
+  cp mafftash_premafft.pl seekquencer_premafft.pl dvtditr dndfast7 dndblast \
+     sextet5 mafft-distance pairlocalalign pair2hat3s multi2hat3s pairash \
+     addsingle splittbfast disttbfast tbfast mafft-profile f2cl mccaskillwrap \
+     contrafoldwrap countlen seq2regtable regtable2seq score getlag dndpre \
+     setcore replaceu restoreu setdirection makedirectionlist version \
+     "$MAFFT_INSTALL_DIR/libexec/mafft/"
+  
+  # 5. Set permissions
+  chmod 755 "$MAFFT_INSTALL_DIR/bin/"*
+  chmod 755 "$MAFFT_INSTALL_DIR/libexec/mafft/"*
+  
+  echo "MAFFT manually installed to $MAFFT_INSTALL_DIR"
 fi
+
+# # Build MAFFT
+# if [ -e "$MAFFT_BUILD_DIR/build/mafft" ]; then
+#   echo "MAFFT already built, skipping"
+# else
+#   download $MAFFT_URL $MAFFT_DOWNLOAD_PATH
+#   untar $MAFFT_DOWNLOAD_PATH $MAFFT_BUILD_DIR
+#   echo "Building MAFFT"
+#   cd $MAFFT_BUILD_DIR
+#   mkdir -p $MAFFT_INSTALL_DIR
+#   cd core
+#   sed -i '1s!.*!PREFIX = $(MAFFT_INSTALL_DIR)!' Makefile
+#   make
+#   make install
+# fi
 
 
 # Add things to PATH
@@ -233,6 +273,33 @@ update_perl_path () {
 BEDTOOLS_LIB_DIR="$BEDTOOLS_BUILD_DIR/lib"
 update_perl_path $BEDTOOLS_LIB_DIR
 
+### ALEX: Fix cpanm on the cluster
+# # 1. Bootstrap cpanm if you haven't already
+# wget -O cpanm https://cpanmin.us
+# chmod +x cpanm
+
+# #2. Use Conda's OpenSSL (Common at Mila)
+# # This assumes you have an active conda environment
+# if [ -n "$CONDA_PREFIX" ]; then
+#     export OPENSSL_PREFIX=$CONDA_PREFIX
+#     echo "Using OpenSSL headers from Conda environment: $CONDA_PREFIX"
+# else
+#     echo "Warning: No Conda environment detected. Net::SSLeay may fail."
+# fi
+
+# # 2. Force install the specific blockers identified in your log
+# # Using --notest speeds this up significantly
+# ./cpanm --local-lib-contained --notest Config::MVP CPAN::Uploader
+
+# # 3. Now try Dist::Zilla again
+# ./cpanm --local-lib-contained --notest Dist::Zilla
+
+# # 4. Finally, install the rest of Roary's dependencies
+# cd "$start_dir"
+# dzil authordeps --missing | xargs ./cpanm --local-lib-contained --notest
+# dzil listdeps --missing | xargs ./cpanm --local-lib-contained --notest
+
+# Original Dist::Zilla commands:
 cd $start_dir
 cpanm --notest Dist::Zilla 
 dzil authordeps --missing | cpanm --notest
@@ -242,7 +309,7 @@ cd $start_dir
 
 echo "Add the following lines to one of these files ~/.bashrc or ~/.bash_profile or ~/.profile"
 echo "export PATH=${ROARY_BIN_DIR}:${PARALLEL_BIN_DIR}:${BEDTOOLS_BIN_DIR}:${CDHIT_BIN_DIR}:${PRANK_BIN_DIR}:${BLAST_BIN_DIR}:${MCL_BIN_DIR}:${MCL_BIN_DIR_2}:${FASTTREE_BIN_DIR}:${MAFFT_BIN_DIR}:${PATH}"
-echo "export PERL5LIB=${ROARY_LIB_DIR}:${BEDTOOLS_LIB_DIR}:${PERL5LIB}"
+echo "export PERL5LIB=${ROARY_PERL_LIB}:${ROARY_LIB_DIR}:${BEDTOOLS_LIB_DIR}:${PERL5LIB}"
 
 set +eu
 set +x

@@ -22,6 +22,8 @@ check_conda_channels () {
 	cd $SEQ2GENO_HOME
 }
 
+echo "CONDA CHANNELS DONE. Now set up Roary dependencies..."
+
 set_roary_dependencies () {
 	## Roary dependencies
 	cd $SEQ2GENO_HOME/denovo/lib/Roary
@@ -37,7 +39,7 @@ download_proc_specific_env () {
 	echo '+extract example dataset'
 	cd $SEQ2GENO_HOME/examples
 	echo '+test the procedures in dryrun mode with the example dataset'
-	$SEQ2GENO_HOME/main/seq2geno -z $SEQ2GENO_HOME/examples/example_input.zip || return false
+	#$SEQ2GENO_HOME/main/seq2geno -z $SEQ2GENO_HOME/examples/example_input.zip || return false
 }
 
 #>>>

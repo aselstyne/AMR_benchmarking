@@ -5,14 +5,14 @@
 ############################################################################################################################
 ###1. the location to download the PATRIC dataset to.  ~246G (Please change to your local address.)
 ###dataset_location: /vol/projects/BIFO/patric_genome MUST USE ABSOLUTE PATH
-dataset_location: \/home/mila/a/aselstya/scratch/amr/AMR_benchmarking/ncbi_genome
+dataset_location: /tmp/AMR_benchmarking/ncbi_genome
 ###2. The path to store the direct results of each software and further visualization. (Either absolute path or relative path) - ./ FOR SCRATCH
-output_path: /home/mila/a/aselstya/scratch/amr/AMR_benchmarking/
+output_path: /tmp/AMR_benchmarking/
 ###3. The path to store the tempary files (note: some software will generate large amount of temp files to 60G in the process,
 ###  if you run all species in parallel. Either absolute path or relative path - ./ FOR SCRATCH
-log_path: /home/mila/a/aselstya/scratch/amr/AMR_benchmarking/
+log_path: /tmp/AMR_benchmarking/
 ###4 . max cpu
-n_jobs: 6
+n_jobs: 8
 ###5. gpu possibility for Aytan-Aktug SSSA model, If set to False, parallelization on cpu will be applied;
 #  Otherwise, it will be applied on one gpu core sequentially.
 gpu_on: True

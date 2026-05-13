@@ -24,3 +24,19 @@ dependencies:
   - psutil=5.8.0
   - python=3.9
   - mamba=0.13.0
+  - perl
+  - perl-app-cpanminus
+  - perl-moose
+  - perl-net-ssleay
+  - perl-io-socket-ssl
+  - perl-libwww-perl
+  - perl-lwp-protocol-https
+  - perl-termreadkey
+  - perl-json
+  - perl-try-tiny
+  - perl-module-build
+  - perl-extutils-makemaker
+  - perl-specio
+  - perl-getopt-long-descriptive
+  - perl-perlio-utf8_strict
+  - perl-datetime

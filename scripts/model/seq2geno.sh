@@ -40,6 +40,8 @@ source activate ${amr_env_name}
 python ./AMR_software/seq2geno/main_s2p.py -f_prepare_meta -path_sequence ${dataset_location} -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}  -n_jobs ${n_jobs}|| { echo "Errors in S2G initializing. Exit ."; exit; }
 conda deactivate
 
+echo "INIT COMPLETE!"
+
 #########################################################################################################
 ### 1. seq2geno
 #########################################################################################################
