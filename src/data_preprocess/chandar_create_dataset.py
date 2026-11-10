@@ -9,9 +9,24 @@ import json
 PATH_DATASETS_REINTERPRETED = "../datasets" # Root folder, with one subfolder per species inside. Should have one CSV in each
 PATH_OUT = "./data/NCBI"
 
+# ALEX (2026-11 rerun): restrict the benchmark to the 9 species/drug combos used in amr-pred
+# (amr-pred/config/dataset/*/*.yaml). Other SR_filt / phyloFolds files are ignored.
+COMBOS = {
+    ("acinetobacter_baumannii", "ciprofloxacin"), ("acinetobacter_baumannii", "ceftazidime"),
+    ("klebsiella_pneumoniae", "tobramycin"), ("klebsiella_pneumoniae", "meropenem"),
+    ("staphylococcus_aureus", "erythromycin"),
+    ("escherichia_coli", "cefotaxime"), ("escherichia_coli", "cefepime"), ("escherichia_coli", "imipenem"),
+    ("pseudomonas_aeruginosa", "aztreonam"),
+}
+
+def in_combos(path):
+    parts = Path(path).stem.split("__")
+    drug = parts[1].replace("_SR_filt", "")
+    return (parts[0], drug) in COMBOS
+
 def create_dataset_NCBI():
     # Search all subfolders for SR_filt.csv files
-    csv_files = list(Path(PATH_DATASETS_REINTERPRETED).glob('**/*SR_filt.csv'))
+    csv_files = [f for f in Path(PATH_DATASETS_REINTERPRETED).glob('**/*SR_filt.csv') if in_combos(f)]
     print(f"Found {len(csv_files)} CSV files, combining...")
 
     if not csv_files:
@@ -96,7 +111,7 @@ def create_quality_files():
 def create_cv_folds():
     ''' Translate our existing phylogeny-based CV folds to their format '''
     # Get a list of all the existing CV fold files
-    cv_files = list(Path(PATH_DATASETS_REINTERPRETED).glob('**/*phyloFolds_hierarchical.csv'))
+    cv_files = [f for f in Path(PATH_DATASETS_REINTERPRETED).glob('**/*phyloFolds_hierarchical.csv') if in_combos(f)]
     print(f"Found {len(cv_files)} CV fold files, translating...")
 
     for cv_file in cv_files:
@@ -160,6 +175,9 @@ if __name__ == "__main__":
     # Add argument to override PATH_DATASETS_REINTERPRETED
     parser = argparse.ArgumentParser()
     parser.add_argument("--path_datasets_reinterpreted", default=PATH_DATASETS_REINTERPRETED)
+    # ALEX: 'dataset' = NCBI_genomes_AMR.txt + dummy quality files (run before chandar_preprocess.py);
+    # 'folds' = phylo folds JSON (run after generate_random_folds.py).
+    parser.add_argument("--steps", nargs="+", default=["folds"], choices=["dataset", "folds"])
     args = parser.parse_args()
     PATH_DATASETS_REINTERPRETED = args.path_datasets_reinterpreted
 
@@ -171,6 +189,8 @@ if __name__ == "__main__":
     os.makedirs(f"{PATH_OUT}/cv_folds/loose", exist_ok=True)
     os.makedirs(f"{PATH_OUT}/cv_folds/loose/single_S_A_folds", exist_ok=True)
     # Run main script
-    # create_dataset_NCBI()
-    # create_quality_files()
-    create_cv_folds()
+    if "dataset" in args.steps:
+        create_dataset_NCBI()
+        create_quality_files()
+    if "folds" in args.steps:
+        create_cv_folds()

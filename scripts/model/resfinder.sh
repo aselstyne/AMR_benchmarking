@@ -40,23 +40,25 @@ source activate ${resfinder_env}
 wait
 
 echo "Point-/Resfinder blastn version:"
-python ./AMR_software/resfinder/main_run_blastn.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit; }
+python ./AMR_software/resfinder/main_run_blastn.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit 1; }
 
 echo "Point-/Resfinder KMA version:"
-python ./AMR_software/resfinder/main_run_kma.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit; }
+python ./AMR_software/resfinder/main_run_kma.py -path_sequence ${dataset_location} -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in resfinder running. Exit ."; exit 1; }
 
 source activate ${amr_env_name}
 echo "Point-/Resfinder extract results:"
-python ./AMR_software/resfinder/extract_results.py -s "${species[@]}" -f_no_zip -o ${output_path} -temp ${log_path} || { echo "Errors in resfinder results summarize. Exit ."; exit; }
+python ./AMR_software/resfinder/extract_results.py -s "${species[@]}" -f_no_zip -o ${output_path} -temp ${log_path} || { echo "Errors in resfinder results summarize. Exit ."; exit 1; }
 conda deactivate
 
 
 #### Evaluate resfinder under CV folds
 
+# ALEX (2026-11 rerun): CV-fold evaluation not used for the paper table (whole-dataset scores are); skip it.
+exit 0
 echo "Evaluate Point-/Resfinder under CV folds:"
-python ./AMR_software/resfinder/main_resfinder_folds.py -f_phylotree -cv ${cv_number} -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}  -f_no_zip|| { echo "Errors in resfinder running. Exit ."; exit; }
-# python ./AMR_software/resfinder/main_resfinder_folds.py -f_kma -cv ${cv_number} -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}  -f_no_zip|| { echo "Errors in resfinder running. Exit ."; exit; }
-python ./AMR_software/resfinder/main_resfinder_folds.py -cv ${cv_number} -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}  -f_no_zip|| { echo "Errors in resfinder running. Exit ."; exit; }
+python ./AMR_software/resfinder/main_resfinder_folds.py -f_phylotree -cv ${cv_number} -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria}  -f_no_zip|| { echo "Errors in resfinder running. Exit ."; exit 1; }
+# python ./AMR_software/resfinder/main_resfinder_folds.py -f_kma -cv ${cv_number} -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}  -f_no_zip|| { echo "Errors in resfinder running. Exit ."; exit 1; }
+python ./AMR_software/resfinder/main_resfinder_folds.py -cv ${cv_number} -temp ${log_path} -s "${species[@]}" -l ${QC_criteria}  -f_no_zip|| { echo "Errors in resfinder running. Exit ."; exit 1; }
 
 
 ### CV score generation.

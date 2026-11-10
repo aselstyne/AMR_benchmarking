@@ -1,0 +1,6 @@
+	number	modelling antibiotics
+Escherichia coli	3	['cefepime', 'cefotaxime', 'imipenem']
+Klebsiella pneumoniae	2	['meropenem', 'tobramycin']
+Acinetobacter baumannii	2	['ceftazidime','ciprofloxacin']
+Staphylococcus aureus	1	['erythromycin']
+Pseudomonas aeruginosa	2	['aztreonam', 'cefepime']

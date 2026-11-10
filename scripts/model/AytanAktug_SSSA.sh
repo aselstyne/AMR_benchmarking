@@ -43,7 +43,7 @@ IFS=', ' read -ra species_list_temp_tree <<< "$species_list_phylotree" # species
 species_tree=( "${species_list_temp_tree[@]//_/ }" )
 
 #### Initialization
-python ./AMR_software/AytanAktug/main_SSSA.py -f_initialize -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA initialization. Exit ."; exit; }
+python ./AMR_software/AytanAktug/main_SSSA.py -f_initialize -temp ${log_path} --n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA initialization. Exit ."; exit 1; }
 echo "Finished: initialize."
 
 
@@ -60,25 +60,25 @@ echo "Finished: initialize."
 # cd $SCRIPTPATH
 # cd ../..
 
-# python ./AMR_software/AytanAktug/main_SSSA.py -f_pre_cluster -path_sequence ${dataset_location} -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug pre-clustering. Exit ."; exit; }
+# python ./AMR_software/AytanAktug/main_SSSA.py -f_pre_cluster -path_sequence ${dataset_location} -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug pre-clustering. Exit ."; exit 1; }
 # echo "Finished: merge_scaffold."
 # #
 # ##
 # for s in "${species_list_temp[@]}"; \
-# do bash ./AMR_software/AytanAktug/cluster_preparation/cluster_SSSA.sh ${s} ${log_path};done || { echo "Errors in Aytan-Aktug KMA clustering. Exit ."; exit; }
+# do bash ./AMR_software/AytanAktug/cluster_preparation/cluster_SSSA.sh ${s} ${log_path};done || { echo "Errors in Aytan-Aktug KMA clustering. Exit ."; exit 1; }
 # echo "Finished: clustering."
 
 # #
-# python ./src/cv_folds/generate_random_folds.py -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number}|| { echo "Errors in folds regenerating. Exit ."; exit; }
-# python ./src/cv_folds/prepare_folds.py -f_kma -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number} -temp ${log_path}|| { echo "Errors in folds regenerating. Exit ."; exit; }
+# python ./src/cv_folds/generate_random_folds.py -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number}|| { echo "Errors in folds regenerating. Exit ."; exit 1; }
+# python ./src/cv_folds/prepare_folds.py -f_kma -s "${species[@]}" -l ${QC_criteria} -cv ${cv_number} -temp ${log_path}|| { echo "Errors in folds regenerating. Exit ."; exit 1; }
 # echo "Folds regenerated."
 ############################################################################
 # exit()
 
 ## Feature preparing.
-python ./AMR_software/AytanAktug/main_SSSA.py  -f_res -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA feature building 1. Exit ."; exit; }
-python ./AMR_software/AytanAktug/main_SSSA.py  -f_merge_mution_gene -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA feature building 2. Exit ."; exit; }
-python ./AMR_software/AytanAktug/main_SSSA.py  -f_matching_io -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA feature building 3. Exit ."; exit; }
+python ./AMR_software/AytanAktug/main_SSSA.py  -f_res -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA feature building 1. Exit ."; exit 1; }
+python ./AMR_software/AytanAktug/main_SSSA.py  -f_merge_mution_gene -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA feature building 2. Exit ."; exit 1; }
+python ./AMR_software/AytanAktug/main_SSSA.py  -f_matching_io -temp ${log_path} -n_jobs ${n_jobs} -s "${species[@]}" -l ${QC_criteria} || { echo "Errors in Aytan-Aktug SSSA feature building 3. Exit ."; exit 1; }
 echo "Finished: features."
 conda deactivate
 
@@ -90,14 +90,14 @@ then
   source activate ${multi_torch_env_name}
   wait
   #### we modified their codes by adding in early stop mechanism (patience 200), dropout (0, 0.2) hyperparameters, and a hyperparameter optimization procedure
-  # python ./AMR_software/AytanAktug/main_SSSA.py  -f_phylotree -f_nn -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-#   python ./AMR_software/AytanAktug/main_SSSA.py  -f_kma -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-  # python ./AMR_software/AytanAktug/main_SSSA.py  -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
+  python ./AMR_software/AytanAktug/main_SSSA.py  -f_phylotree -f_nn -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }  # ALEX 2026-11 rerun: published variant (hyperparameter search), phylo folds only
+#   python ./AMR_software/AytanAktug/main_SSSA.py  -f_kma -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
+  # python ./AMR_software/AytanAktug/main_SSSA.py  -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
 
   ### Aytan-Aktug oroginal version.
-  python ./AMR_software/AytanAktug/main_SSSA.py  -f_phylotree -f_nn_base -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-#   python ./AMR_software/AytanAktug/main_SSSA.py  -f_kma -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-  python ./AMR_software/AytanAktug/main_SSSA.py  -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
+  # python ./AMR_software/AytanAktug/main_SSSA.py  -f_phylotree -f_nn_base -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }  # ALEX 2026-11 rerun: disabled
+#   python ./AMR_software/AytanAktug/main_SSSA.py  -f_kma -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
+  # python ./AMR_software/AytanAktug/main_SSSA.py  -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }  # ALEX 2026-11 rerun: disabled
 
 
 else #parallel on CPUs
@@ -105,14 +105,14 @@ else #parallel on CPUs
   source activate ${multi_env_name}
   wait
   ### we modified their codes by adding in early stop mechanism (patience 200), dropout (0, 0.2) hyperparameters, and a hyperparameter optimization procedure
-  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_phylotree -f_nn -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-#   python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_kma -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
+  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_phylotree -f_nn -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
+#   python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_kma -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
+  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_nn -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.0 -e 0 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
 
   ##Aytan-Aktug oroginal version.
-  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_phylotree -f_nn_base -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-#   python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_kma -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
-  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit; }
+  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_phylotree -f_nn_base -temp ${log_path} -s "${species_tree[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
+#   python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_kma -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
+  python ./AMR_software/AytanAktug/main_SSSA.py -cv ${cv_number} -n_jobs ${n_jobs} -f_cpu -f_nn_base -temp ${log_path} -s "${species[@]}" -l ${QC_criteria} -learning 0.001 -e 1000 -f_fixed_threshold -f_optimize_score 'f1_macro' -cv ${cv_number} || { echo "Errors in Aytan-Aktug SSSA NN. Exit ."; exit 1; }
 
 
 fi
@@ -127,8 +127,9 @@ python ./src/analysis_utility/result_analysis_AytanAktug.py -f_SSSA -cv ${cv_num
 # python ./src/analysis_utility/result_analysis_AytanAktug.py -f_SSSA -cv ${cv_number} -f_kma -s "${species[@]}" \
 # -f_optimize_score 'f1_macro' -f_fixed_threshold -learning 0.0 -e 0 -temp ${log_path} -o ${output_path} -l ${QC_criteria}
 
-python ./src/analysis_utility/result_analysis_AytanAktug.py -f_SSSA -cv ${cv_number} -s "${species[@]}" \
--f_optimize_score 'f1_macro' -f_fixed_threshold -learning 0.0 -e 0 -temp ${log_path} -o ${output_path} -l ${QC_criteria} -cv ${cv_number}
+# ALEX 2026-11 rerun: random folds not trained, so no random-fold analysis
+# python ./src/analysis_utility/result_analysis_AytanAktug.py -f_SSSA -cv ${cv_number} -s "${species[@]}" \
+# -f_optimize_score 'f1_macro' -f_fixed_threshold -learning 0.0 -e 0 -temp ${log_path} -o ${output_path} -l ${QC_criteria} -cv ${cv_number}
 
 #### default NN model/
 # python ./src/analysis_utility/result_analysis_AytanAktug.py -f_SSSA -cv ${cv_number} -f_kma -s "${species[@]}" \

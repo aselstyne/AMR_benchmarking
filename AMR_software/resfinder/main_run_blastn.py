@@ -95,6 +95,11 @@ def determination(species,path_data,n_jobs,temp_path,threshold_point,min_cov_poi
     data_sub_anti = pd.DataFrame(data=id, columns=['genome_id'],index=np.array(range(len(id))))
     data_sub_anti = data_sub_anti.drop_duplicates()
     id_list = data_sub_anti['genome_id'].to_list()
+    # ALEX (2026-11 rerun): skip genomes that already have a finished ResFinder output.
+    done_dir = path_results + 'software_output/' + str(species.replace(" ", "_")) + '/'
+    n_before = len(id_list)
+    id_list = [g for g in id_list if not os.path.isfile(done_dir + str(g) + '/pheno_table.txt')]
+    print(species, ': skipping', n_before - len(id_list), 'genomes with existing output; running', len(id_list))
 
     pool = mp.Pool(processes=n_jobs)
     total_number=len(id_list)
